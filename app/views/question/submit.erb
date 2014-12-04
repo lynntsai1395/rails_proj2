@@ -1,0 +1,14 @@
+<h2>Submit a Question</h2>
+<% if user_signed_in? %>
+  <%= form_tag('/question/submit', method: 'post', class: 'well') do %>
+    <p><strong>Question Title:</strong></p>
+    <p><input type="text" name="title" class="form-control" value="" /></p>
+    <p><strong>Question Body:</strong></p>
+    <p><textarea class="form-control" name="body" rows="10"></textarea></p>
+    <p><input type="submit" class="btn btn-primary" value="Post Question" /></p>
+  <% end %>
+<% else %>
+  <div class="alert alert-danger">
+    <strong>You're not signed in.</strong> To submit a question, please <%= link_to 'sign in', '/users/sign_in' %> first.
+  </div>
+<% end %>

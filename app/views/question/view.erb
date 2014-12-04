@@ -1,0 +1,108 @@
+<script>
+  $(document).ready(function() {
+    $('.arrow-up, .arrow-down').click(function() {
+      var entity = $(this).parent().data('entity'),
+        nowActive = !$(this).hasClass('active'),
+        delta = (nowActive ? 1 : 0) * ($(this).hasClass('arrow-up') ? 1 : -1),
+        holder = $('.arrow-holder[data-entity=' + entity + ']'),
+        count = holder.children('p');
+
+      // remove active from other arrows
+      holder.children('a').removeClass('active');
+      count.text(parseInt(holder.data('start')) + delta);
+
+      if (nowActive) {
+        $(this).addClass('active');
+      }
+
+      $.post('/vote/cast', {entity: entity, type: nowActive ? (delta == 1 ? 'up' : 'down') : 'delete'});
+    });
+  });
+</script>
+<style>
+  .arrow-holder p {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  .arrow-up, .arrow-down {
+    display: block;
+
+    width: 0;
+    height: 0;
+
+    cursor: pointer;
+  }
+
+  .arrow-up {
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid #555;
+  }
+
+  .arrow-up.active {
+    border-bottom: 20px solid pink !important;
+  }
+
+  .arrow-up:hover {
+    border-bottom: 20px solid #888;
+  }
+
+  .arrow-down {
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #555;
+  }
+
+  .arrow-down.active {
+    border-top: 20px solid pink !important;
+  }
+
+  .arrow-down:hover {
+    border-top: 20px solid #888;
+  }
+</style>
+
+<div class="row">
+  <div class="col-xs-1">
+    <div class="arrow-holder" style="padding-top: 20px;" data-entity="question-<%= @question.id %>" data-start="<%= @question.num_votes_without(current_user) %>">
+      <a class="arrow-up <%= (signed_in? and current_user.has_voted_up("question-#{@question.id}")) ? 'active' : '' %>"></a>
+      <p><%= @question.num_votes %></p>
+      <a class="arrow-down <%= (signed_in? and current_user.has_voted_down("question-#{@question.id}")) ? 'active' : '' %>"></a>
+    </div>
+  </div>
+  <div class="col-xs-11">
+    <h1><%= @question.title %></h1>
+    <%= markdown(@question.content) %>
+    <p><em>Question asked by <%= @question.user.email %>.</em></p>
+  </div>
+</div>
+
+<h3>Answers</h3>
+<hr />
+<% if not @question.answers %>
+  <p><em>There are no answers yet.</em></p>
+<% else %>
+  <% @answers.each do |a| %>
+    <div class="row">
+      <div class="col-xs-1">
+        <div class="arrow-holder" data-entity="answer-<%= a.id %>" data-start="<%= a.num_votes_without(current_user) %>">
+          <a class="arrow-up <%= (signed_in? and current_user.has_voted_up("answer-#{a.id}")) ? 'active' : '' %>"></a>
+          <p><%= a.num_votes %></p>
+          <a class="arrow-down <%= (signed_in? and current_user.has_voted_down("answer-#{a.id}")) ? 'active' : '' %>"></a>
+        </div>
+      </div>
+      <div class="col-xs-11">
+        <%= markdown(a.content) %>
+        <p><em>Answer from <%= a.user.email %></em></p>
+      </div>
+    </div>
+    <hr />
+  <% end %>
+<% end %>
+
+<div class="well">
+  <a href="/question/<%= @question.id %>/answer" class="btn btn-primary" style="margin-right: 10px;">Submit an Answer</a>
+  Have a good answer to this question? Share it!
+</div>

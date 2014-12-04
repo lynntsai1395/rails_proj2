@@ -1,0 +1,20 @@
+<h2>Submit an Answer</h2>
+<% if user_signed_in? %>
+  <%= form_tag("/question/#{@question.id}/answer", method: 'post', class: 'well') do %>
+    <p><textarea class="form-control" name="body" rows="15"></textarea></p>
+    <p><input type="submit" class="btn btn-primary" value="Post Answer" /></p>
+  <% end %>
+<% else %>
+  <div class="alert alert-danger">
+    <strong>You're not signed in.</strong> To answer a question, please <%= link_to 'sign in', '/users/sign_in' %> first.
+  </div>
+<% end %>
+
+<hr />
+
+<p><strong>Original Question:</strong></p>
+<p><%= link_to '&laquo; Back to Question'.html_safe, "/question/#{@question.id}" %></p>
+<div class="well">
+  <h3><%= @question.title %></h3>
+  <%= markdown(@question.content) %>
+</div>

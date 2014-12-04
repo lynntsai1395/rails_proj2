@@ -1,0 +1,26 @@
+Title: Segmentation Fault
+Team Members: Lynn Tsai, Chris Kuehl
+Demo Link: https://enigmatic-spire-2129.herokuapp.com/
+
+Idea: Stack Overflow for interview questions.
+
+Models and Description:
+User
+has name, email, and many questions, answers, and votes
+Question
+has title, content, and many answers and votes, belongs to a user
+Answer
+has content, belongs to a user and a question
+Vote
+belongs to either a question or answer, as well as a user; is either up or down
+
+Features:
+Users can log in
+Anyone can ask questions
+Anyone can answer those questions
+Ability to vote up/down questions and answers (using AJAX)
+Text is presented using Markdown to allow code, links, etc.
+Question and answer lists are sorted by votes.
+
+Division of Labor:
+Everything was done "pair programming" at the same time.

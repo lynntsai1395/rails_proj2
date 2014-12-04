@@ -1,0 +1,33 @@
+<h2>Popular Questions</h2>
+<!-- sorry about this -->
+<style>
+  .question-list a {
+    display: block;
+    margin: 0;
+    padding: 10px;
+    padding-bottom: 5px;
+    color: #222;
+
+    margin-bottom: 10px;
+  }
+
+  .question-list a:hover {
+    text-decoration: none;
+      color: #555;
+  }
+
+  .question-list a p {
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+</style>
+
+<div class="question-list">
+  <% @questions.each do |q| %>
+    <a class="well" href="/question/<%= q.id %>">
+      <p style="float: left; font-size: 24px; font-weight: bold; margin-right: 15px; width: 32px; text-align: center; padding-top: 5px;"><%= q.num_votes %></p>
+      <p><strong><%= q.title %></strong></p>
+      <p><%= q.answers.length %> answer(s) posted.</p>
+    </a>
+  <% end %>
+</div>
